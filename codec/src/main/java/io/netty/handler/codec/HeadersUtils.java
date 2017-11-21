@@ -84,7 +84,7 @@ public final class HeadersUtils {
     private static final class StringEntryIterator implements Iterator<Entry<String, String>> {
         private final Iterator<Entry<CharSequence, CharSequence>> iter;
 
-        public StringEntryIterator(Iterator<Entry<CharSequence, CharSequence>> iter) {
+        StringEntryIterator(Iterator<Entry<CharSequence, CharSequence>> iter) {
             this.iter = iter;
         }
 
@@ -145,7 +145,7 @@ public final class HeadersUtils {
     private static final class StringIterator<T> implements Iterator<String> {
         private final Iterator<T> iter;
 
-        public StringIterator(Iterator<T> iter) {
+        StringIterator(Iterator<T> iter) {
             this.iter = iter;
         }
 
@@ -167,7 +167,7 @@ public final class HeadersUtils {
     }
 
     private static final class CharSequenceDelegatingStringSet extends DelegatingStringSet<CharSequence> {
-        public CharSequenceDelegatingStringSet(Set<CharSequence> allNames) {
+        CharSequenceDelegatingStringSet(Set<CharSequence> allNames) {
             super(allNames);
         }
 
@@ -185,7 +185,7 @@ public final class HeadersUtils {
     private abstract static class DelegatingStringSet<T> implements Set<String> {
         protected final Set<T> allNames;
 
-        public DelegatingStringSet(Set<T> allNames) {
+        DelegatingStringSet(Set<T> allNames) {
             this.allNames = checkNotNull(allNames, "allNames");
         }
 
@@ -231,7 +231,9 @@ public final class HeadersUtils {
         private void fillArray(Object[] arr) {
             Iterator<T> itr = allNames.iterator();
             for (int i = 0; i < size(); ++i) {
-                arr[i] = itr.next();
+                // We need to call toString() here as we expose the headers as Strings.
+                // If we fail to do so it will throw an ArrayStoreException.
+                arr[i] = itr.next().toString();
             }
         }
 
