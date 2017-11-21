@@ -631,6 +631,10 @@ abstract class DnsNameResolverContext<T> {
             queryLifecycleObserver.queryFailed(NAME_SERVERS_EXHAUSTED_EXCEPTION);
 
             // .. and we could not find any A/AAAA records.
+
+            // If cause != null we know this was caused by a timeout / cancel /transport exception. In this case we
+            // won't try to resolve the CNAME as we only should do this if we could not get the A/AAAA records because
+            // these not exists and the DNS server did probably signal it.
             if (cause == null && !triedCNAME) {
                 // As the last resort, try to query CNAME, just in case the name server has it.
                 triedCNAME = true;

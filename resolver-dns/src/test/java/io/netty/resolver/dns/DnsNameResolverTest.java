@@ -1365,6 +1365,8 @@ public class DnsNameResolverTest {
         Throwable cause = result.cause();
         assertTrue(cause instanceof UnknownHostException);
         assertTrue(cause.getCause() instanceof DnsNameResolverTimeoutException);
+        assertTrue(DnsNameResolver.isTimeoutError(cause));
+        assertTrue(DnsNameResolver.isTransportOrTimeoutError(cause));
         resolver.close();
     }
 }
